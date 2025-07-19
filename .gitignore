@@ -1,0 +1,44 @@
+# Gradle
+.gradle/
+build/
+out/
+!gradle/wrapper/gradle-wrapper.jar
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+out/
+
+# Eclipse
+*.classpath
+*.project
+.settings/
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Java
+*.class
+*.log
+
+# Forge/Fabric specific
+run/
+logs/
+remappedSrc/
+remappedMod/
+*.jar
+
+# Cache
+.cache/
+bin/
+.gradle/
+generated/
+
+# Minecraft
+**/config/
+**/mods/

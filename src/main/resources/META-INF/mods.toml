@@ -1,0 +1,25 @@
+modLoader = "javafml"
+loaderVersion = "[47,)"
+license = "All Rights Reserved"
+[[mods]]
+modId = "flashables"
+version = "${file.jarVersion}"
+displayName = "Flashables"
+authors = "SMIBII"
+description = '''
+
+'''
+
+[[dependencies.flashables]]
+modId = "forge"
+mandatory = true
+versionRange = "[47,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.flashables]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.20.1,1.21)"
+ordering = "NONE"
+side = "BOTH"
