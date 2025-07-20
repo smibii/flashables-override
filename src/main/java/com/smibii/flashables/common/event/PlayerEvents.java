@@ -11,7 +11,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -60,16 +59,19 @@ public class PlayerEvents {
     public static void onPlayerLeave(PlayerEvent.PlayerLoggedOutEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer serverPlayer)) return;
         ServerLightLogic.removeAllLight(serverPlayer);
+        LAST_ITEM.remove(serverPlayer.getUUID());
     }
 
     private static void evaluateLightItem(ServerPlayer player, ItemStack stack, LightPosition lightPos) {
         Map<LightPosition, ItemStack> lastItems = LAST_ITEM.computeIfAbsent(player.getUUID(), id -> new EnumMap<>(LightPosition.class));
         ItemStack previous = lastItems.get(lightPos);
-        if (previous != null && ItemStack.isSameItemSameTags(previous, stack)) return;
-        lastItems.put(lightPos, stack);
+
+        if (!stack.isEmpty() && ItemStack.isSameItemSameTags(previous, stack)) return;
+        lastItems.put(lightPos, stack.copy());
 
         LightItem item = LightItemRegistry.getLightItems().get(stack.getItem());
-        if (item == null) {
+
+        if (item == null || stack.isEmpty()) {
             ServerLightLogic.removeLight(player, lightPos);
             return;
         }
@@ -78,6 +80,7 @@ public class PlayerEvents {
         state.mode = item.getMode();
         state.color = item.getColor();
         state.active = item.getPositions() != null && item.getPositions().contains(lightPos) && !item.isToggleable();
+
         ServerLightLogic.setState(player, lightPos, state);
     }
 }

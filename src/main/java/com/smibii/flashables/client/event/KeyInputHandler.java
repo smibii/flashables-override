@@ -1,5 +1,6 @@
 package com.smibii.flashables.client.event;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.smibii.flashables.constants.LightPosition;
 import com.smibii.flashables.lights.LightItem;
 import com.smibii.flashables.lights.LightItemRegistry;
@@ -15,19 +16,17 @@ import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import org.lwjgl.glfw.GLFW;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class KeyInputHandler {
-    public static final KeyMapping toggleFlashlightKey = new KeyMapping(
-            "key.flashables.toggle",
-            GLFW.GLFW_KEY_F,
-            "key.categories.flashables"
-    );
+    public static final KeyMapping TOGGLE_KEY = new KeyMapping("key.flashables.toggle", InputConstants.Type.KEYSYM, InputConstants.KEY_F, "key.categories.flashables");
 
-    @SubscribeEvent
-    public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
-        event.register(toggleFlashlightKey);
+    @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+    private static class ClientSetup {
+        @SubscribeEvent
+        public static void register(RegisterKeyMappingsEvent event) {
+            event.register(TOGGLE_KEY);
+        }
     }
 
     @SubscribeEvent
@@ -35,6 +34,7 @@ public class KeyInputHandler {
         Minecraft mc = Minecraft.getInstance();
 
         if (mc.screen != null || mc.player == null) return;
+        if (!TOGGLE_KEY.consumeClick()) return;
 
         LocalPlayer player = mc.player;
 
