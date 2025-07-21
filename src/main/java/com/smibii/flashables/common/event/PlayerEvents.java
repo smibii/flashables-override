@@ -66,6 +66,7 @@ public class PlayerEvents {
         Map<LightPosition, ItemStack> lastItems = LAST_ITEM.computeIfAbsent(player.getUUID(), id -> new EnumMap<>(LightPosition.class));
         ItemStack previous = lastItems.get(lightPos);
 
+        if (previous == null) previous = ItemStack.EMPTY;
         if (!stack.isEmpty() && ItemStack.isSameItemSameTags(previous, stack)) return;
         lastItems.put(lightPos, stack.copy());
 

@@ -16,7 +16,7 @@ plugins {
 apply plugin: 'org.spongepowered.mixin'
 
 group = 'com.smibii'
-version = '1.0.08-SNAPSHOT'
+version = '1.0.10-SNAPSHOT'
 
 java {
     archivesBaseName = 'flashables'

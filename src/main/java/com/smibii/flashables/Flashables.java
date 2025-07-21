@@ -3,6 +3,7 @@ package com.smibii.flashables;
 import com.mojang.logging.LogUtils;
 import com.smibii.flashables.constants.ModConstants;
 import com.smibii.flashables.network.NetworkHandler;
+import foundry.veil.api.quasar.emitters.shape.Sphere;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.packs.repository.PackRepository;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
