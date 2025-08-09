@@ -16,8 +16,8 @@ public class LightType {
     protected Vec3 position;
     protected Vec2 rotation;
 
-    private LightMode mode;
-    private boolean orientationLock;
+    private final LightMode mode;
+    private final boolean orientationLock;
 
     public LightType(LightMode mode, LightColor color, float distance, float brightness, float angle, Vec2 size) {
         this(mode, color, distance, brightness, angle, size, false);

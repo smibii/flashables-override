@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    { "item": "flashables:flashlight" },
+    { "tag": "flashables:glass_or_stained" }
+  ],
+  "result": {
+    "item": "flashables:flashlight",
+    "count": 1
+  }
+}

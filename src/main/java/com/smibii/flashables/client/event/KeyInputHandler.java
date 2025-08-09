@@ -6,20 +6,25 @@ import com.smibii.flashables.lights.LightItem;
 import com.smibii.flashables.lights.LightItemRegistry;
 import com.smibii.flashables.network.NetworkHandler;
 import com.smibii.flashables.network.packets.RequestToggleLightPacket;
+import com.smibii.flashables.util.EnergyNbt;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class KeyInputHandler {
-    public static final KeyMapping TOGGLE_KEY = new KeyMapping("key.flashables.toggle", InputConstants.Type.KEYSYM, InputConstants.KEY_F, "key.categories.flashables");
+    public static final KeyMapping TOGGLE_KEY =
+            new KeyMapping("key.flashables.toggle", InputConstants.Type.KEYSYM, InputConstants.KEY_F, "key.categories.flashables");
+
+    private static boolean wasPressedLastTick = false;
 
     @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
     private static class ClientSetup {
@@ -30,28 +35,59 @@ public class KeyInputHandler {
     }
 
     @SubscribeEvent
-    public static void onKeyInput(InputEvent.Key event) {
+    public static void onClientTick(TickEvent.ClientTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) return;
+
         Minecraft mc = Minecraft.getInstance();
-
         if (mc.screen != null || mc.player == null) return;
-        if (!TOGGLE_KEY.consumeClick()) return;
 
-        LocalPlayer player = mc.player;
+        boolean isPressedNow = TOGGLE_KEY.isDown();
+        if (isPressedNow && !wasPressedLastTick) {
+            LocalPlayer player = mc.player;
 
-        if (tryToggle(player.getItemBySlot(EquipmentSlot.HEAD).getItem(), LightPosition.HEAD)) return;
-        if (tryToggle(player.getMainHandItem().getItem(), LightPosition.MAINHAND)) return;
-        if (tryToggle(player.getOffhandItem().getItem(), LightPosition.OFFHAND)) return;
+            if (!tryToggle(player.getItemBySlot(EquipmentSlot.HEAD), LightPosition.HEAD)
+                    && !tryToggle(player.getMainHandItem(), LightPosition.MAINHAND)) {
+                tryToggle(player.getOffhandItem(), LightPosition.OFFHAND);
+            }
+        }
+        wasPressedLastTick = isPressedNow;
     }
 
-    private static boolean tryToggle(ItemLike item, LightPosition lightPos) {
-        LightItem lightItem = LightItemRegistry.getLightItems().get(item);
-        if (lightItem == null) return false;
+    @SubscribeEvent
+    public static void onUseKey(InputEvent.InteractionKeyMappingTriggered event) {
+        if (!event.isUseItem()) return;
 
-        boolean canToggle = lightItem.isToggleable() && lightItem.getPositions().contains(lightPos);
+        Minecraft mc = Minecraft.getInstance();
+        LocalPlayer player = mc.player;
+        if (player == null || mc.screen != null) return;
+
+        ItemStack mainhand = player.getMainHandItem();
+        LightItem li = LightItemRegistry.findFor(mainhand);
+        if (li == null) return;
+
+        boolean canToggle = li.isToggleable()
+                && li.getPositions() != null
+                && li.getPositions().contains(LightPosition.MAINHAND)
+                && EnergyNbt.exists(mainhand);
+
+        if (canToggle) {
+            NetworkHandler.broadcastToServer(new RequestToggleLightPacket(LightPosition.MAINHAND));
+            event.setCanceled(true);
+        }
+    }
+
+    private static boolean tryToggle(ItemStack stack, LightPosition lightPos) {
+        LightItem li = LightItemRegistry.findFor(stack);
+        if (li == null) return false;
+
+        boolean canToggle = li.isToggleable()
+                && li.getPositions() != null
+                && li.getPositions().contains(lightPos)
+                && EnergyNbt.exists(stack);
+
         if (canToggle) {
             NetworkHandler.broadcastToServer(new RequestToggleLightPacket(lightPos));
         }
-
         return canToggle;
     }
 }

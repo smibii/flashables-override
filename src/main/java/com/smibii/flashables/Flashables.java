@@ -2,13 +2,16 @@ package com.smibii.flashables;
 
 import com.mojang.logging.LogUtils;
 import com.smibii.flashables.constants.ModConstants;
+import com.smibii.flashables.items.CreativeTab;
+import com.smibii.flashables.items.ModItems;
 import com.smibii.flashables.network.NetworkHandler;
-import foundry.veil.api.quasar.emitters.shape.Sphere;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.packs.repository.PackRepository;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
@@ -19,6 +22,9 @@ public class Flashables {
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public Flashables() {
+        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+        ModItems.register(bus);
+        CreativeTab.TABS.register(bus);
         NetworkHandler.register();
     }
 

@@ -28,7 +28,7 @@ public class RequestToggleLightPacket {
     public static void handle(RequestToggleLightPacket msg, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             ServerPlayer player = ctx.get().getSender();
-            if (player != null && player instanceof PlayerMixinAccessor accessor) {
+            if (player instanceof PlayerMixinAccessor accessor) {
                 LightState state = accessor.get(msg.position);
                 state.active = !state.active;
 
