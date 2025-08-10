@@ -10,6 +10,7 @@ import com.smibii.flashables.util.EnergyNbt;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -44,12 +45,12 @@ public class KeyInputHandler {
         boolean isPressedNow = TOGGLE_KEY.isDown();
         if (isPressedNow && !wasPressedLastTick) {
             LocalPlayer player = mc.player;
-
             if (!tryToggle(player.getItemBySlot(EquipmentSlot.HEAD), LightPosition.HEAD)
                     && !tryToggle(player.getMainHandItem(), LightPosition.MAINHAND)) {
                 tryToggle(player.getOffhandItem(), LightPosition.OFFHAND);
             }
         }
+
         wasPressedLastTick = isPressedNow;
     }
 
@@ -68,9 +69,15 @@ public class KeyInputHandler {
         boolean canToggle = li.isToggleable()
                 && li.getPositions() != null
                 && li.getPositions().contains(LightPosition.MAINHAND)
-                && EnergyNbt.exists(mainhand);
+                && EnergyNbt.exists(mainhand)
+                && EnergyNbt.getPower(mainhand) <= 0;
+
+        if (EnergyNbt.getPower(mainhand) <= 0) {
+            player.playSound(SoundEvents.REDSTONE_TORCH_BURNOUT);
+        }
 
         if (canToggle) {
+            player.playSound(SoundEvents.FLINTANDSTEEL_USE);
             NetworkHandler.broadcastToServer(new RequestToggleLightPacket(LightPosition.MAINHAND));
             event.setCanceled(true);
         }
@@ -83,7 +90,8 @@ public class KeyInputHandler {
         boolean canToggle = li.isToggleable()
                 && li.getPositions() != null
                 && li.getPositions().contains(lightPos)
-                && EnergyNbt.exists(stack);
+                && EnergyNbt.exists(stack)
+                && EnergyNbt.getPower(stack) > 0;
 
         if (canToggle) {
             NetworkHandler.broadcastToServer(new RequestToggleLightPacket(lightPos));

@@ -54,6 +54,9 @@ public class FlashlightItem extends EnergyItem {
 
         if (EnergyNbt.getPower(otherHand) <= 0) {
             otherHand.shrink(1);
+            if (otherHand.getCount() >= 1) {
+                EnergyNbt.setPower(otherHand, EnergyNbt.DEFAULT_MAX);
+            }
         }
 
         return InteractionResultHolder.sidedSuccess(flashlight, level.isClientSide);

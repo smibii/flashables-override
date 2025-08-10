@@ -7,12 +7,12 @@
   ],
   "key": {
     "i": { "item": "minecraft:iron_ingot" },
-    "g": { "item": "minecraft:glass_pane" },
+    "g": { "item": "minecraft:lime_stained_glass_pane" },
     "l": { "item": "minecraft:redstone_lamp" },
     "b": { "tag": "minecraft:buttons" }
   },
   "result": {
     "item": "flashables:flashlight",
-    "nbt": "{color:0, Power: 0}"
+    "nbt": "{color:9, Power: 0}"
   }
 }

@@ -10,13 +10,13 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
-import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 import java.util.*;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class LightItemRegistry {
     private static final Map<Item, List<LightItem>> REGISTRY = new HashMap<>();
 
@@ -24,7 +24,7 @@ public class LightItemRegistry {
     private static final List<LightPosition> POS_HEAD = List.of(LightPosition.HEAD);
 
     @SubscribeEvent
-    public static void setup(ServerStartingEvent event) {
+    public static void setup(FMLCommonSetupEvent event) {
         register(Items.TORCH,           LightMode.GLOW, LightColor.ORANGE, POS_BOTH);
         register(Items.SOUL_TORCH,      LightMode.GLOW, LightColor.CYAN,   POS_BOTH);
         register(Items.REDSTONE_TORCH,  LightMode.GLOW, LightColor.RED,    POS_BOTH);

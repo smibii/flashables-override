@@ -11,11 +11,11 @@ public class ModItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, ModConstants.MODID);
 
     public static final RegistryObject<Item> BATTERY = ITEMS.register(
-            "battery", () -> new BatteryItem(new Item.Properties())
+            "battery", () -> new BatteryItem(new Item.Properties().stacksTo(16))
     );
 
     public static final RegistryObject<Item> FLASHLIGHT = ITEMS.register(
-            "flashlight", () -> new FlashlightItem(new Item.Properties())
+            "flashlight", () -> new FlashlightItem(new Item.Properties().stacksTo(1))
     );
 
     public static void register(IEventBus bus) {

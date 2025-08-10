@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import com.smibii.flashables.constants.ModConstants;
 import com.smibii.flashables.items.CreativeTab;
 import com.smibii.flashables.items.ModItems;
+import com.smibii.flashables.lights.LightItemRegistry;
 import com.smibii.flashables.network.NetworkHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.packs.repository.PackRepository;
