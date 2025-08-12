@@ -1,6 +1,7 @@
 modLoader = "javafml"
 loaderVersion = "[47,)"
 license = "All Rights Reserved"
+
 [[mods]]
 modId = "flashables"
 version = "${file.jarVersion}"

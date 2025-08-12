@@ -22,6 +22,7 @@ public class LightItemRegistry {
 
     private static final List<LightPosition> POS_BOTH = List.of(LightPosition.MAINHAND, LightPosition.OFFHAND);
     private static final List<LightPosition> POS_HEAD = List.of(LightPosition.HEAD);
+    private static final List<LightPosition> POS_ALL = List.of(LightPosition.MAINHAND, LightPosition.OFFHAND, LightPosition.HEAD);
 
     @SubscribeEvent
     public static void setup(FMLCommonSetupEvent event) {

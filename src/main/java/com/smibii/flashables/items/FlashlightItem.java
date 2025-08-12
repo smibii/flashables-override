@@ -7,8 +7,11 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.PlayerHeadItem;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -43,12 +46,9 @@ public class FlashlightItem extends EnergyItem {
             tag.putBoolean(KEY_CAN_TOGGLE, true);
 
             if (!level.isClientSide) {
-                level.playSound(
-                        null,
-                        player.blockPosition(),
+                player.playNotifySound(
                         SoundEvents.EXPERIENCE_ORB_PICKUP,
-                        SoundSource.PLAYERS,
-                        0.4f, 1.2f);
+                        SoundSource.PLAYERS, 0.8f, 1.0f);
             }
         }
 
@@ -61,6 +61,18 @@ public class FlashlightItem extends EnergyItem {
 
         return InteractionResultHolder.sidedSuccess(flashlight, level.isClientSide);
     }
+
+    @Override
+    public @Nullable EquipmentSlot getEquipmentSlot(ItemStack stack) {
+        return EquipmentSlot.HEAD;
+    }
+
+    @Override
+    public boolean canEquip(ItemStack stack, EquipmentSlot armorType, Entity entity) {
+        return armorType == EquipmentSlot.HEAD;
+    }
+
+
 
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {

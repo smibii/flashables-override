@@ -45,9 +45,9 @@ public class KeyInputHandler {
         boolean isPressedNow = TOGGLE_KEY.isDown();
         if (isPressedNow && !wasPressedLastTick) {
             LocalPlayer player = mc.player;
-            if (!tryToggle(player.getItemBySlot(EquipmentSlot.HEAD), LightPosition.HEAD)
-                    && !tryToggle(player.getMainHandItem(), LightPosition.MAINHAND)) {
-                tryToggle(player.getOffhandItem(), LightPosition.OFFHAND);
+            if (!tryToggle(player, player.getItemBySlot(EquipmentSlot.HEAD), LightPosition.HEAD)
+                    && !tryToggle(player, player.getMainHandItem(), LightPosition.MAINHAND)) {
+                tryToggle(player, player.getOffhandItem(), LightPosition.OFFHAND);
             }
         }
 
@@ -70,20 +70,20 @@ public class KeyInputHandler {
                 && li.getPositions() != null
                 && li.getPositions().contains(LightPosition.MAINHAND)
                 && EnergyNbt.exists(mainhand)
-                && EnergyNbt.getPower(mainhand) <= 0;
+                && EnergyNbt.getPower(mainhand) > 0;
 
         if (EnergyNbt.getPower(mainhand) <= 0) {
-            player.playSound(SoundEvents.REDSTONE_TORCH_BURNOUT);
+            player.playSound(SoundEvents.FLINTANDSTEEL_USE);
         }
 
         if (canToggle) {
-            player.playSound(SoundEvents.FLINTANDSTEEL_USE);
+            player.playSound(SoundEvents.LEVER_CLICK);
             NetworkHandler.broadcastToServer(new RequestToggleLightPacket(LightPosition.MAINHAND));
             event.setCanceled(true);
         }
     }
 
-    private static boolean tryToggle(ItemStack stack, LightPosition lightPos) {
+    private static boolean tryToggle(LocalPlayer player, ItemStack stack, LightPosition lightPos) {
         LightItem li = LightItemRegistry.findFor(stack);
         if (li == null) return false;
 
@@ -93,7 +93,12 @@ public class KeyInputHandler {
                 && EnergyNbt.exists(stack)
                 && EnergyNbt.getPower(stack) > 0;
 
+        if (EnergyNbt.getPower(stack) <= 0) {
+            player.playSound(SoundEvents.FLINTANDSTEEL_USE);
+        }
+
         if (canToggle) {
+            player.playSound(SoundEvents.LEVER_CLICK);
             NetworkHandler.broadcastToServer(new RequestToggleLightPacket(lightPos));
         }
         return canToggle;

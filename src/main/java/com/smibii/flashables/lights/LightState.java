@@ -7,9 +7,9 @@ import com.smibii.flashables.constants.LightPosition;
 import net.minecraft.world.entity.player.Player;
 
 public class LightState {
-    public boolean active;
+    public boolean active = false;
     public LightMode mode = LightMode.BEAM;
-    public LightColor color;
+    public LightColor color = LightColor.DEFAULT;
 
     public static LightState get(Player player, LightPosition lightPos) {
         if (!(player instanceof PlayerMixinAccessor accessor)) return null;

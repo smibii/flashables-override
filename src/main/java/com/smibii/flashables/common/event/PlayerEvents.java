@@ -10,6 +10,8 @@ import com.smibii.flashables.util.EnergyNbt;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.TickEvent;
@@ -94,6 +96,9 @@ public class PlayerEvents {
         if (EnergyNbt.exists(stack) && EnergyNbt.getPower(stack) <= 0) {
             state.active = false;
             ServerLightLogic.setState(player, pos, state);
+            player.playNotifySound(
+                    SoundEvents.FLINTANDSTEEL_USE,
+                    SoundSource.PLAYERS, 0.8f, 1.0f);
             return;
         }
 
@@ -118,6 +123,9 @@ public class PlayerEvents {
 
         if (power - 1 <= 0) {
             state.active = false;
+            player.playNotifySound(
+                    SoundEvents.FLINTANDSTEEL_USE,
+                    SoundSource.PLAYERS, 0.8f, 1.0f);
             ServerLightLogic.setState(player, pos, state);
         }
     }

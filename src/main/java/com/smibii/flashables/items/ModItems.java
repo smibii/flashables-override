@@ -1,6 +1,7 @@
 package com.smibii.flashables.items;
 
 import com.smibii.flashables.constants.ModConstants;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;

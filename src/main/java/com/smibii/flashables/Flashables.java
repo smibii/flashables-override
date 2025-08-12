@@ -2,6 +2,7 @@ package com.smibii.flashables;
 
 import com.mojang.logging.LogUtils;
 import com.smibii.flashables.constants.ModConstants;
+import com.smibii.flashables.crafting.RecipeSerializers;
 import com.smibii.flashables.items.CreativeTab;
 import com.smibii.flashables.items.ModItems;
 import com.smibii.flashables.lights.LightItemRegistry;
@@ -25,7 +26,8 @@ public class Flashables {
     public Flashables() {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         ModItems.register(bus);
-        CreativeTab.TABS.register(bus);
+        CreativeTab.register(bus);
+        RecipeSerializers.register(bus);
         NetworkHandler.register();
     }
 
